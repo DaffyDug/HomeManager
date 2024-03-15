@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 class Program
 {
     static void Main(string[] args)
@@ -15,49 +14,20 @@ class Program
 };
         while (true)
         {
-            CommandHome(commandHome);
+            StartMenu(commandHome);
+            if (InputHelper.Input("введите что вы хотите делать: ", 1, commandHome.Length, out int inputvalue))
+            {
+                commandHome[inputvalue - 1].Run();
+            }
         }
     }
-    public static void CommandHome(ICommandHome[] commandHome)
+    public static void StartMenu(ICommandHome[] commandHome)
     {
         for (int i = 0; i < commandHome.Length; i++)
         {
             Console.WriteLine($"{i + 1}--{commandHome[i]}");
         }
         Console.WriteLine('\n');
-        int.TryParse(Console.ReadLine(), out int intvalue);
-        commandHome[intvalue - 1].Run();
-        Console.WriteLine('\n');
-    }
-}
-class HomeManagerConsole
-{
-    public static readonly HomeManagerConsole homeManager;
-    private HomeManagerConsole()
-    { }
-    static HomeManagerConsole()
-    {
-        homeManager = new HomeManagerConsole();
-    }
-    List<ICommandHome> Icommands = new List<ICommandHome>()
-    {
-        new OnSun(),
-        new OffSun(),
-        new Onvacuum_cleaner(),
-        new water_supply(),
-        new Onsignaling(),
-        new order_food()
-    };
-    public void RunCommand<T>() where T : ICommandHome
-    {
-        foreach (var item in Icommands)
-        {
-            if (item.GetType() == typeof(T))
-            {
-                item.Run();
-                break;
-            }
-        }
     }
 }
 class OnSun : ICommandHome
@@ -101,8 +71,4 @@ class order_food : ICommandHome
     {
         Console.WriteLine("еда заказана");
     }
-}
-public interface ICommandHome
-{
-    public void Run();
 }
